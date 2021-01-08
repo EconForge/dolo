@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Shocks - Dolo</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
+        <link href="../css/mkapi-common.css" rel="stylesheet">
+        <link href="../css/mkapi-mkdocs.css" rel="stylesheet">
+        <link href="../css/extra.css" rel="stylesheet">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Dolo</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../installation/" class="nav-link">Install</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../model_api/" class="nav-link">Model API</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Algorithms <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../perfect_foresight.md" class="dropdown-item">perfect_foresight</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#shocks" class="nav-link">Shocks</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#iid-distributions" class="nav-link">IID Distributions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#continuous-autoregressive-process" class="nav-link">Continuous Autoregressive Process</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#markov-chains" class="nav-link">Markov chains</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#product" class="nav-link">Product</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#conditional-processes" class="nav-link">Conditional processes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#discretization-methods-for-continous-shocks" class="nav-link">Discretization methods for continous shocks</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="shocks">Shocks</h1>
+<p>The type of exogenous shock associated to a model determines the kind of decision rule, which will be obtained by the solvers. Shocks can pertain to one of the following categories:</p>
+<ul>
+<li>
+<p>continuous i.i.d. shocks</p>
+</li>
+<li>
+<p>continuous auto-correlated process</p>
+</li>
+<li>
+<p>discrete markov chain.</p>
+</li>
+</ul>
+<p>Exogenous shock processes are specified in the section <code>exogenous</code> of a yaml file.. Dolo accepts various exogenous processes such as normally distributed iid shocks, VAR1 processes, and Markov Chain processes.</p>
+<p>Here are some examples for each type of shock:</p>
+<h2 id="iid-distributions">IID Distributions</h2>
+<h3 id="univariate-distributions">Univariate distributions</h3>
+<h4 id="iid-normal">IID Normal</h4>
+<p>The type of the shock is specified using yaml type annotations (starting with exclamation mark)</p>
+<p>Normal distribution with mean mu and variance σ^2 has the probability density function</p>
+<div>
+<div class="MathJax_Preview">f(x; \mu, \sigma) = \frac{1}{\sqrt{2 \pi \sigma^2}}
+\exp \left( - \frac{(x - \mu)^2}{2 \sigma^2} \right)</div>
+<script type="math/tex; mode=display">f(x; \mu, \sigma) = \frac{1}{\sqrt{2 \pi \sigma^2}}
+\exp \left( - \frac{(x - \mu)^2}{2 \sigma^2} \right)</script>
+</div>
+<p>A normal shock in the yaml file with mean 0.2 and standard deviation 0.1 can be declared as follows</p>
+<div class="highlight"><pre><span></span><code>!Normal:
+    σ: 0.1
+    μ: 0.2
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code>!Normal:
+    sigma: 0.1
+    mu: 0.2
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Greek letter 'σ' or 'sigma' (similarly 'μ' or 'mu' ) are accepted, thanks to the <code>greek_tolerance</code> function.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When defining shocks in a dolo model, that is in an <code>exogenous</code> section, The exogenous shock section can refer to parameters specified in the calibration section:</p>
+<div class="highlight"><pre><span></span><code>symbols:
+...
+      parameters: [alpha, beta, mu, sigma]
+...
+calibration:
+      sigma: 0.01
+      mu: 0.0
+
+exogenous: !Normal:
+      σ: sigma
+      μ: mu
+</code></pre></div>
+</div>
+<h4 id="iid-lognormal">IID LogNormal</h4>
+<p>Parametrization of a lognormal random variable Y is in terms of he mean, μ, and standard deviation, σ, of the unique normally distributed random variable X is as follows</p>
+<div>
+<div class="MathJax_Preview">f(x; \mu, \sigma) = \frac{1}{x \sqrt{2 \pi \sigma^2}}
+\exp \left( - \frac{(\log(x) - \mu)^2}{2 \sigma^2} \right),
+\quad x &gt; 0</div>
+<script type="math/tex; mode=display">f(x; \mu, \sigma) = \frac{1}{x \sqrt{2 \pi \sigma^2}}
+\exp \left( - \frac{(\log(x) - \mu)^2}{2 \sigma^2} \right),
+\quad x > 0</script>
+</div>
+<p>such that exp(X) = Y</p>
+<div class="highlight"><pre><span></span><code>exogenous: !LogNormal:
+      σ: sigma
+      μ: mu
+</code></pre></div>
+<h4 id="uniform">Uniform</h4>
+<p>Uniform distribution over an interval [a,b]</p>
+<div>
+<div class="MathJax_Preview">f(x; a, b) = \frac{1}{b - a}, \quad a \le x \le b</div>
+<script type="math/tex; mode=display">f(x; a, b) = \frac{1}{b - a}, \quad a \le x \le b</script>
+</div>
+<div class="highlight"><pre><span></span><code>symbols:
+      states: [k]
+      controls: [c, d]
+      exogenous: [e]
+      parameters: [alpha, beta, mu, sigma, e_min, e_max]
+
+.
+.
+.
+
+exogenous: !Uniform:
+      a: e_min
+      b: e_max
+</code></pre></div>
+<h4 id="beta">Beta</h4>
+<p>If X∼Gamma(α) and Y∼Gamma(β) are distributed independently, then X/(X+Y)∼Beta(α,β).</p>
+<p>Beta distribution with shape parameters α and β has the following PDF</p>
+<div>
+<div class="MathJax_Preview">f(x; \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} (1 x)^{\beta - 1}, \quad x \in [0, 1]</div>
+<script type="math/tex; mode=display">f(x; \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} (1 x)^{\beta - 1}, \quad x \in [0, 1]</script>
+</div>
+<div class="highlight"><pre><span></span><code>exogenous: !Beta
+      α: 0.3
+      β: 0.1
+</code></pre></div>
+<h4 id="bernouilli">Bernouilli</h4>
+<p>Binomial distribution parameterized by <span><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> yields <span><span class="MathJax_Preview">1</span><script type="math/tex">1</script></span> with probability <span><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span> and <span><span class="MathJax_Preview">0</span><script type="math/tex">0</script></span> with probability <span><span class="MathJax_Preview">1-p</span><script type="math/tex">1-p</script></span>.</p>
+<div class="highlight"><pre><span></span><code>!Bernouilli
+      π: 0.3
+</code></pre></div>
+<h3 id="multivariate-distributions">Multivariate distributions</h3>
+<h4 id="normal-multivariate">Normal (multivariate)</h4>
+<p>Note the difference with <code>UNormal</code>. Parameters <code>Σ</code> (not <code>σ</code>) and <code>μ</code> take a matrix and a vector respectively as argument.
+<div class="highlight"><pre><span></span><code>!Normal:
+      Σ: [[0.0]]
+      μ: [0.1]
+</code></pre></div></p>
+<h3 id="mixtures">Mixtures</h3>
+<p>For now, mixtures are defined for i.i.d. processes only. They take an integer valued distribution (like the Bernouilli one) and a different distribution associated to each of the values.</p>
+<div class="highlight"><pre><span></span><code>!Mixture
+    index: !Bernouilli
+        p: 0.3
+    distributions:
+        0: UNormal(μ=0.0, σ=0.01)
+        1: UNormal(μ=0.0, σ=0.02)
+</code></pre></div>
+<p>Mixtures are not restricted to 1d distributions, but all distributions of the mixture must have the same dimension.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>Right now, mixtures accept only distributions as values. To switch between constants, one can use a <code>Constant</code> distribution as in the following examples.</p>
+<div class="highlight"><pre><span></span><code>...
+exogenous:
+    e,v: !Mixture:
+        index: !Bernouilli
+            p: 0.3
+        distributions:
+            0: Constant(μ=[0.1, 0.2])
+            1: Constant(μ=[0.2, 0.3])
+</code></pre></div>
+<h2 id="continuous-autoregressive-process">Continuous Autoregressive Process</h2>
+<h3 id="ar1-var1">AR1 / VAR1</h3>
+<p>For now, <code>AR1</code> is an alias for <code>VAR1</code>. Autocorrelation <code>ρ</code> must be a scalar (otherwise we don't know how to discretize).</p>
+<div class="highlight"><pre><span></span><code>exogenous: !AR1
+    rho: 0.9
+    Sigma: [[σ^2]]
+</code></pre></div>
+<h2 id="markov-chains">Markov chains</h2>
+<p>Markov chains are constructed by providing a list of nodes and a transition matrix.</p>
+<div class="highlight"><pre><span></span><code>exogenous: !MarkovChain
+    values: [[-0.01, 0.1],[0.01, 0.1]]
+    transitions: [[0.9, 0.1], [0.1, 0.9]]
+</code></pre></div>
+<h2 id="product">Product</h2>
+<p>We can also specify more than one process. For instance if we want to combine a VAR1 and an Normal Process we use the tag Product and write:</p>
+<div class="highlight"><pre><span></span><code>exogenous: !Product
+
+    - !VAR1
+        rho: 0.75
+        Sigma:  [[0.015^2, -0.05], [-0.05, 0.012]]
+
+    -  !Normal:
+        σ: sigma
+        μ: mu
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that another syntax is accepted, in the specific context of a dolo exogenous section. It keeps the Product operator implicit. Suppose a dolo model has <span><span class="MathJax_Preview">r,w,e</span><script type="math/tex">r,w,e</script></span> as exogenous shocks. It is possible to list several shocks for each variable as in the following example:</p>
+<p>```
+symbols:
+        ...
+        exogenous: [r,w,e]</p>
+<p>exogenous:
+      r,w: !VAR1
+           rho: 0.75
+           Sigma: [[0.015^2, -0.05], [-0.05, 0.012]]</p>
+<div class="highlight"><pre><span></span><code>  e  !Normal:
+        σ: sigma
+        μ: mu
+</code></pre></div>
+<p>```</p>
+<p>In this case we define several shocks for several variables (or combinations thereof).</p>
+</div>
+<h2 id="conditional-processes">Conditional processes</h2>
+<p>Support is very limited for now. It is possible to define markov chains, whose transitions (not the values) depend on the output of another process.</p>
+<div class="highlight"><pre><span></span><code>exogenous: !Conditional
+    condition: !UNormal
+        mu: 0.0
+        sigma: 0.2
+    type: Markov
+    arguments: !Function
+        arguments: [x]
+        value:
+          states: [0.1, 0.2]
+          transitions: !Matrix
+              [[1-0.1-x, 0.1+x],
+               [0.5,       0.5]]
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The plan is to replace the clean and explicit but somewhat tedious syntax above by the following (where dependence is detected automatically):</p>
+<div class="highlight"><pre><span></span><code>exogenous:
+    x: !UNormal
+        mu: 0.0
+        sigma: 0.2
+    y: !Markov
+          states: [0.1, 0.2]
+          transitions: !Matrix
+              [[1-0.1-x, 0.1+x],
+               [0.5,       0.5]]
+</code></pre></div>
+</div>
+<h2 id="discretization-methods-for-continous-shocks">Discretization methods for continous shocks</h2>
+<p>To solve a non-linear model with a given exogenous process, one can apply different types of procedures to discretize the continous process:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Distribution</th>
+<th>Discretization procedure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Univariate iid</td>
+<td>UNormal(μ, σ)</td>
+<td>Equiprobable, Gauss-Hermite Nodes</td>
+</tr>
+<tr>
+<td>Univariate iid</td>
+<td>LogNormal(μ, σ)</td>
+<td>Equiprobable</td>
+</tr>
+<tr>
+<td>Univariate iid</td>
+<td>Uniform(a, b )</td>
+<td>Equiprobable</td>
+</tr>
+<tr>
+<td>Univariate iid</td>
+<td>Beta(α, β)</td>
+<td>Equiprobable</td>
+</tr>
+<tr>
+<td>Univariate iid</td>
+<td>Beta(α, β)</td>
+<td>Equiprobable</td>
+</tr>
+<tr>
+<td>VAR1</td>
+<td></td>
+<td>Generalized Discretization Method (GDP), Markov Chain</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Here we can define shortly each method. Then perhaps link to a jupyter notebook as discussed: Conditional on the discretization approach, present the results of the corresponding method solutions and simulations. Discuss further discretization methods and related dolo objects.</p>
+</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../js/mkapi.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@3" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

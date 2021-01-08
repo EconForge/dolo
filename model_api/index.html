@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Model API - Dolo</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
+        <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
+        <link href="../css/mkapi-common.css" rel="stylesheet">
+        <link href="../css/mkapi-mkdocs.css" rel="stylesheet">
+        <link href="../css/extra.css" rel="stylesheet">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Dolo</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../installation/" class="nav-link">Install</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Model API</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Algorithms <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../perfect_foresight.md" class="dropdown-item">perfect_foresight</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../installation/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#model-api" class="nav-link">Model API</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#model-object" class="nav-link">Model Object</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#calibration" class="nav-link">Calibration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#functions" class="nav-link">Functions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#exogenous-shock" class="nav-link">Exogenous shock</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#options-structure" class="nav-link">Options structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="model-api">Model API</h1>
+<p>For numerical purposes, models are essentially represented as a set of
+symbols, calibration and functions representing the various equation
+types of the model. This data is held in a <code>Model</code> object whose
+API is described in this chapter. Models are usually created by writing
+a Yaml files as described in the the previous chapter, but as we will
+see below, they can also be written directly as long as they satisfy the requirements detailed below.</p>
+<h2 id="model-object">Model Object</h2>
+<p>As previously, let\'s consider, the Real Business Cycle example, from
+the introduction. The model object can be created using the yaml file:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">yaml_import</span><span class="p">(</span><span class="s1">&#39;models/rbc.yaml&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>The object contains few meta-data:</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">display( model.name )</span>  <span class="c1"># -&gt; Real Business Cycles</span>
+<span class="l l-Scalar l-Scalar-Plain">display( model.model_type )</span>   <span class="c1"># -&gt; `dtcc`</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>model_type</code> field is now always <code>dtcc</code>. Older model types (<code>'dtmscc'</code>, <code>'dtcscc'</code>, <code>'dynare'</code>) are not used anymore.</p>
+</div>
+<h2 id="calibration">Calibration</h2>
+<p>Each models stores calibration information as <code>model.calibration</code>. It is a special dictionary-like object,  which contains
+calibration information, that is values for parameters and initial values (or steady-state) for all other variables of the model.</p>
+<p>It is possible to retrieve one or several variables calibrations:</p>
+<div class="highlight"><pre><span></span><code><span class="n">display</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="p">)</span> <span class="c1">#  -&gt;  2.9</span>
+<span class="n">display</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">]</span>  <span class="c1">#  -&gt; [2.9, 0.08]</span>
+</code></pre></div>
+<p>When a key coresponds to one of the symbols group, one gets one or several vectors of variables instead:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span> <span class="c1"># - &gt; np.array([2.9, 0]) (values of states [z, k])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">,</span> <span class="s1">&#39;controls&#39;</span><span class="p">]</span> <span class="c1"># -&gt; [np.array([2.9, 0]), np.array([0.29, 1.0])]</span>
+</code></pre></div>
+<p>To get regular dictionary mapping states groups and vectors, one can use the attributed <code>.grouped</code>
+The values are vectors (1d numpy arrays) of values for each symbol group. For instance the following code will print the calibrated values of the parameters:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="p">(</span><span class="n">variable_group</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">variables_group</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
+</code></pre></div>
+<p>In order to get a <code>(key,values)</code> of all the values of the model, one can call <code>model.calibration.flat</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="p">(</span><span class="n">variable_group</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">variables_group</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The calibration object can contain values that are not symbols of the model. These values can be used to calibrate model parameters
+and are also evaluated in the other yaml sections, using the supplied value.</p>
+</div>
+<p>One uses the <code>model.set_calibration()</code> routine to change the calibration of the model.  This one takes either a dict as an argument, or a set of keyword arguments. Both calls are valid:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span> <span class="p">{</span><span class="s1">&#39;delta&#39;</span><span class="p">:</span><span class="mf">0.01</span><span class="p">}</span> <span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span> <span class="p">{</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;delta*k&#39;</span><span class="p">}</span> <span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">2.8</span> <span class="p">)</span>
+</code></pre></div>
+<p>This method also understands symbolic expressions (as string) which makes it possible to define symbols as a function of other symbols:</p>
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="s1">&#39;1/(1+delta)&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_calibration</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">))</span>   <span class="c1"># -&gt; nan</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">set_calibration</span><span class="p">(</span><span class="n">delta</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_calibration</span><span class="p">([</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;delta&#39;</span><span class="p">]))</span> <span class="c1"># -&gt; [0.96, 0.04]</span>
+</code></pre></div>
+<p>Under the hood, the method stores the symbolic relations between symbols. It is precisely equivalent to use the <code>set_calibration</code> method
+or to change the values in the yaml files. In particular, the calibration order is irrelevant as long as all parameters can be deduced one from another.</p>
+<h2 id="functions">Functions</h2>
+<p>A model of a specific type can feature various kinds of functions. For instance, a continuous-states-continuous-controls models, solved by iterating on the Euler equations may feature a transition equation <span><span class="MathJax_Preview">g</span><script type="math/tex">g</script></span> and an arbitrage equation <span><span class="MathJax_Preview">f</span><script type="math/tex">f</script></span>. Their signature is respectively <span><span class="MathJax_Preview">s_t=g(m_{t-1},s_{t-1},x_{t-1},m_t)</span><script type="math/tex">s_t=g(m_{t-1},s_{t-1},x_{t-1},m_t)</script></span> and <span><span class="MathJax_Preview">E_t[f(m_t,s_t,x_t,s_{t+1},x_{t+1},m_{t+1})]</span><script type="math/tex">E_t[f(m_t,s_t,x_t,s_{t+1},x_{t+1},m_{t+1})]</script></span>, where <span><span class="MathJax_Preview">s_t</span><script type="math/tex">s_t</script></span>, <span><span class="MathJax_Preview">x_t</span><script type="math/tex">x_t</script></span> and <span><span class="MathJax_Preview">e_t</span><script type="math/tex">e_t</script></span> respectively represent a vector of states, controls and exogenous shock. Implicitly, all functions are also assumed to depend on the vector of parameters :math:<code>p</code>.</p>
+<p>These functions can be accessed by their type in the model.functions dictionary:</p>
+<div class="highlight"><pre><span></span><code><span class="n">g</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="s1">&#39;transition&#39;</span><span class="p">]</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="s1">&#39;arbitrage&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>Let's call the arbitrage function on the steady-state value, to see the residuals at the deterministic steady-state:</p>
+<div class="highlight"><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;exogenous&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;controls&#39;</span><span class="p">]</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">calibration</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+<p>The output (<code>res</code>) is two element vector, representing the residuals of the two arbitrage equations at the steady-state. It should be full of zero. Is it ? Great !</p>
+<p>By inspecting the arbitrage function ( <code>f?</code> ), one can see that its call api is:</p>
+<div class="highlight"><pre><span></span><code><span class="n">f</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+<p>Since <code>m</code>, <code>s</code> and <code>x</code> are the short names for exogenous shocks, states and controls, their values at date <span><span class="MathJax_Preview">t+1</span><script type="math/tex">t+1</script></span> is denoted with <code>S</code> and <code>X</code>. This simple convention prevails in most of dolo source code: when possible, vectors at date <code>t</code> are denoted with lowercase, while future vectors are with upper case. We have already commented the presence of the parameter vector <code>p</code>.
+Now, the generated functions also gives the option to perform in place computations, when an output vector is given:</p>
+<div class="highlight"><pre><span></span><code><span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">out</span><span class="p">)</span>   <span class="c1"># out now contains zeros</span>
+</code></pre></div>
+<p>It is also possible to compute derivatives of the function by setting <code>diff=True</code>. In that case, the residual and jacobians with respect to the various arguments are returned as a list:</p>
+<div class="highlight"><pre><span></span><code><span class="n">r</span><span class="p">,</span> <span class="n">r_m</span><span class="p">,</span> <span class="n">r_s</span><span class="p">,</span> <span class="n">r_x</span><span class="p">,</span> <span class="n">r_M</span><span class="p">,</span> <span class="n">r_S</span><span class="p">,</span> <span class="n">r_X</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">diff</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>Since there are two states and two controls, the variables <code>r_s, r_x, r_S, r_X</code> are all 2 by 2 matrices.</p>
+<p>The generated functions also allow for efficient vectorized evaluation. In order to evaluate the residuals :math:<code>N</code> times, one needs to supply matrix arguments, instead of vectors, so that each line corresponds to one value to evaluate as in the following example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="n">vec_m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># we repeat each line N times</span>
+<span class="n">vec_s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># we repeat each line N times</span>
+<span class="n">vec_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vec_X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vec_p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># actually, except for vec_s, the function repeat is not need since broadcast rules apply</span>
+<span class="n">vec_s</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>   <span class="c1"># we provide various guesses for the steady-state capital</span>
+<span class="n">vec_S</span> <span class="o">=</span> <span class="n">vec_s</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">vec_m</span><span class="p">,</span> <span class="n">vec_s</span><span class="p">,</span><span class="n">vec_x</span><span class="p">,</span><span class="n">vec_M</span><span class="p">,</span> <span class="n">vec_S</span><span class="p">,</span><span class="n">vec_X</span><span class="p">,</span><span class="n">vec_p</span><span class="p">)</span>  <span class="c1"># now a 10000 x 2 array</span>
+
+<span class="n">out</span><span class="p">,</span> <span class="n">out_m</span><span class="p">,</span> <span class="n">out_s</span><span class="p">,</span> <span class="n">out_x</span><span class="p">,</span> <span class="n">out_M</span><span class="p">,</span> <span class="n">out_S</span><span class="p">,</span> <span class="n">out_X</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">vec_m</span><span class="p">,</span> <span class="n">vec_s</span><span class="p">,</span><span class="n">vec_x</span><span class="p">,</span> <span class="n">vec_m</span><span class="p">,</span> <span class="n">vec_S</span><span class="p">,</span><span class="n">vec_X</span><span class="p">,</span><span class="n">vec_p</span><span class="p">)</span>
+</code></pre></div>
+<p>The vectorized evaluation is optimized so that it is much faster to make a vectorized call rather than iterate on each point. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the preceding example, the parameters are constant for all evaluations, yet they are repeated. This is not mandatory, and the call <code>f(vec_m, vec_s, vec_x, vec_M, vec_S, vec_X, p)</code> should work exactly as if <code>p</code> had been repeated along the first axis. We follow there numba's <code>guvectorize</code> conventions, even though they slightly differ from numpy's ones.</p>
+</div>
+<h2 id="exogenous-shock">Exogenous shock</h2>
+<p>The <code>exogenous</code> field contains information about the driving process. To get its default, discretized version, one can call <code>model.exogenous.discretize()</code>.</p>
+<h2 id="options-structure">Options structure</h2>
+<p>The <code>model.options</code> structure holds an information required by a particular solution method. For instance, for global methods, <code>model.options['grid']</code> is supposed to hold the boundaries and the number nodes at which to interpolate.</p>
+<div class="highlight"><pre><span></span><code><span class="n">display</span><span class="p">(</span> <span class="n">model</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../js/mkapi.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@3" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@5" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
